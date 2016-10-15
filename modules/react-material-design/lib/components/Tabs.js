@@ -14,7 +14,7 @@ var _reactcss = require('reactcss');
 
 var _reactcss2 = _interopRequireDefault(_reactcss);
 
-var _isString = require('lodash/isString');
+var _isString = require('lodash.isstring');
 
 var _isString2 = _interopRequireDefault(_isString);
 

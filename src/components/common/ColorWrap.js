@@ -1,6 +1,6 @@
 import React from 'react'
 import merge from 'merge'
-import debounce from 'lodash/debounce'
+import debounce from 'lodash.debounce'
 import color from '../../helpers/color'
 import shallowCompare from 'react-addons-shallow-compare'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import reactCSS from 'reactcss'
-import map from 'lodash/map'
+import map from 'lodash.map'
 import material from 'material-colors'
 
 import { ColorWrap } from '../common'

@@ -10,7 +10,7 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _isString = require('lodash/isString');
+var _isString = require('lodash.isstring');
 
 var _isString2 = _interopRequireDefault(_isString);
 
