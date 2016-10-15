@@ -1,29 +1,24 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
+import { ColorWrap, Saturation, Hue } from '../common'
+import PhotoshopFields from './PhotoshopFields'
+import PhotoshopPointerCircle from './PhotoshopPointerCircle'
+import PhotoshopPointer from './PhotoshopPointer'
+import PhotoshopButton from './PhotoshopButton'
+import PhotoshopPreviews from './PhotoshopPreviews'
 
-import { Saturation, Hue } from '../common';
-import PhotoshopFields from './PhotoshopFields';
-import PhotoshopPointerCircle from './PhotoshopPointerCircle';
-import PhotoshopPointer from './PhotoshopPointer';
-
-export class PhotoshopPicker extends ReactCSS.Component {
-
-  constructor(props: any) {
-    super();
+export class Photoshop extends React.Component {
+  constructor(props) {
+    super()
 
     this.state = {
       currentColor: props.hex,
-    };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleAccept = this.handleAccept.bind(this);
-    this.handleCancel = this.handleCancel.bind(this);
+    }
   }
 
-  classes(): any {
-    return {
+  render() {
+    const styles = reactCSS({
       'default': {
         picker: {
           background: '#DCDCDC',
@@ -63,123 +58,71 @@ export class PhotoshopPicker extends ReactCSS.Component {
           border: '2px solid #B3B3B3',
           borderBottom: '2px solid #F0F0F0',
         },
-        Hue: {
-          direction: 'vertical',
-        },
         controls: {
           width: '180px',
           marginLeft: '10px',
         },
-
         top: {
           display: 'flex',
         },
         previews: {
           width: '60px',
         },
-        swatches: {
-          border: '1px solid #B3B3B3',
-          borderBottom: '1px solid #F0F0F0',
-          marginBottom: '2px',
-          marginTop: '1px',
-        },
-        new: {
-          height: '34px',
-          background: 'rgb(' + this.props.rgb.r + ', ' + this.props.rgb.g + ', ' + this.props.rgb.b + ')',
-          boxShadow: 'inset 1px 0 0 #000, inset -1px 0 0 #000, inset 0 1px 0 #000',
-        },
-        current: {
-          height: '34px',
-          background: '#' + this.state.currentColor,
-          boxShadow: 'inset 1px 0 0 #000, inset -1px 0 0 #000, inset 0 -1px 0 #000',
-        },
-        label: {
-          fontSize: '14px',
-          color: '#000',
-          textAlign: 'center',
-        },
         actions: {
           flex: '1',
           marginLeft: '20px',
         },
-        button: {
-          backgroundImage: 'linear-gradient(-180deg, #FFFFFF 0%, #E6E6E6 100%)',
-          border: '1px solid #878787',
-          borderRadius: '2px',
-          height: '20px',
-          boxShadow: '0 1px 0 0 #EAEAEA',
-          fontSize: '14px',
-          color: '#000',
-          lineHeight: '20px',
-          textAlign: 'center',
-          marginBottom: '10px',
-        },
-        acceptButton: {
-          Extend: 'button',
-          boxShadow: '0 0 0 1px #878787',
-        },
       },
-    };
-  }
-
-  handleChange(data: any) {
-    this.props.onChange(data);
-  }
-
-  handleAccept() {
-    this.props.onAccept && this.props.onAccept();
-  }
-
-  handleCancel() {
-    this.props.onCancel && this.props.onCancel();
-  }
-
-  render(): any {
-    var header;
-
-    if (this.props.header) {
-      header = <div is="head">
-        { this.props.header }
-      </div>;
-    }
+    })
 
     return (
-      <div is="picker">
-        { header }
-        <div is="body" className="flexbox-fix">
-          <div is="saturation">
-            <Saturation is="Saturation" {...this.props} pointer={ PhotoshopPointerCircle } onChange={ this.handleChange }/>
-          </div>
-          <div is="hue">
-            <Hue is="Hue" {...this.props} pointer={ PhotoshopPointer } onChange={ this.handleChange } />
-          </div>
-          <div is="controls">
-            <div is="top" className="flexbox-fix">
-              <div is="previews">
-                <div is="label">new</div>
-                <div is="swatches">
-                  <div is="new" />
-                  <div is="current" />
-                </div>
-                <div is="label">current</div>
-              </div>
-              <div is="actions">
-                <div is="acceptButton" ref="accept" onClick={ this.handleAccept }>OK</div>
-                <div is="button" ref="cancel" onClick={ this.handleCancel }>Cancel</div>
+      <div style={ styles.picker } className="photoshop-picker">
+        <div style={ styles.head }>{ this.props.header }</div>
 
-                <PhotoshopFields {...this.props} />
+        <div style={ styles.body } className="flexbox-fix">
+          <div style={ styles.saturation }>
+            <Saturation
+              hsl={ this.props.hsl }
+              hsv={ this.props.hsv }
+              pointer={ PhotoshopPointerCircle }
+              onChange={ this.props.onChange }
+            />
+          </div>
+          <div style={ styles.hue }>
+            <Hue
+              direction="vertical"
+              hsl={ this.props.hsl }
+              pointer={ PhotoshopPointer }
+              onChange={ this.props.onChange }
+            />
+          </div>
+          <div style={ styles.controls }>
+            <div style={ styles.top } className="flexbox-fix">
+              <div style={ styles.previews }>
+                <PhotoshopPreviews
+                  rgb={ this.props.rgb }
+                  currentColor={ this.state.currentColor }
+                />
+              </div>
+              <div style={ styles.actions }>
+                <PhotoshopButton label="OK" onClick={ this.props.onAccept } active />
+                <PhotoshopButton label="Cancel" onClick={ this.props.onCancel } />
+                <PhotoshopFields
+                  rgb={ this.props.rgb }
+                  hsv={ this.props.hsv }
+                  hex={ this.props.hex }
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
+    )
   }
-
 }
 
-PhotoshopPicker.defaultProps = {
+Photoshop.defaultProps = {
   header: 'Color Picker',
-};
+}
 
-export default PhotoshopPicker;
+export default ColorWrap(Photoshop)

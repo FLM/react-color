@@ -2,12 +2,13 @@
 "use strict";
 
 import React from 'react';
-import ReactCSS from 'reactcss';
+import reactCSS from 'reactcss';
 
-class Tile extends ReactCSS.Component {
+class Tile extends React.Component {
 
-  classes() {
-    return {
+  render() {
+
+    const styles = reactCSS({
       'default': {
         tile: {
           fontSize: '16px',
@@ -23,12 +24,12 @@ class Tile extends ReactCSS.Component {
         sidebar: {
           minWidth: '56px',
           maxWidth: '56px',
-          flexBasis: '56', // 72 minus 16
+          flexBasis: '56px', // 72 minus 16
         },
         content: {
           background: 'none',
           flex: '1',
-          maxWidth: '95%',
+          overflow: 'auto',
         },
         secondary: {
           flexBasis: '42',
@@ -47,35 +48,30 @@ class Tile extends ReactCSS.Component {
       },
       'condensed': {
         tile: {
-          paddingBottom: '0',
-          paddingTop: '0',
+          paddingBottom: '0px',
+          paddingTop: '0px',
+          paddingRight: '0px',
         },
         sidebar: {
           minWidth: '28px',
           maxWidth: '28px',
-          flexBasis: '28',
+          flexBasis: '28px',
         },
       },
-    };
-  }
-
-  styles() {
-    return this.css({
+    }, {
       'clickable': this.props.onClick,
-    });
-  }
+    }, this.props);
 
-  render() {
     var [sidebar, content] = this.props.children;
 
     return (
-      <div is="tile" className="flexbox-fix">
+      <div style={ styles.tile } className="flexbox-fix">
 
-        <div is="primary" className="flexbox-fix">
-          <div is="sidebar" key={ "sidebar-#{ sidebar }" }>
+        <div style={ styles.primary } className="flexbox-fix">
+          <div style={ styles.sidebar } key={ "sidebar-#{ sidebar }" }>
             { sidebar }
           </div>
-          <div is="content" key={ "content-#{ content }" }>
+          <div style={ styles.content } key={ "content-#{ content }" }>
             { content }
           </div>
         </div>

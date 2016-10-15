@@ -1,11 +1,17 @@
-var ColorPicker = require('./components/Color');
+export { default as AlphaPicker } from './components/alpha/Alpha'
+export { default as BlockPicker } from './components/block/Block'
+export { default as CirclePicker } from './components/circle/Circle'
+export { default as ChromePicker } from './components/chrome/Chrome'
+export { default as CompactPicker } from './components/compact/Compact'
+export { default as GithubPicker } from './components/github/Github'
+export { default as HuePicker } from './components/hue/Hue'
+export { default as MaterialPicker } from './components/material/Material'
+export { default as PhotoshopPicker } from './components/photoshop/Photoshop'
+export { default as SketchPicker } from './components/sketch/Sketch'
+export { default as SliderPicker } from './components/slider/Slider'
+export { default as SwatchesPicker } from './components/swatches/Swatches'
+export { default as TwitterPicker } from './components/twitter/Twitter'
 
-ColorPicker.chrome = require('./components/ChromePicker');
-ColorPicker.compact = require('./components/CompactPicker');
-ColorPicker.material = require('./components/MaterialPicker');
-ColorPicker.photoshop = require('./components/PhotoshopPicker');
-ColorPicker.sketch = require('./components/SketchPicker');
-ColorPicker.slider = require('./components/SliderPicker');
-ColorPicker.swatches = require('./components/SwatchesPicker');
+export { default as CustomPicker } from './components/common/ColorWrap'
 
-module.exports = ColorPicker;
+export default from './components/chrome/Chrome'

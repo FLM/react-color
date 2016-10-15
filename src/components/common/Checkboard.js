@@ -1,63 +1,53 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
+const checkboardCache = {}
 
-let _checkboardCache = {};
-
-function renderCheckboard(c1: string, c2: string, size: number): any {
-  if (typeof document == 'undefined') return null; // Dont Render On Server
-  var canvas: any = document.createElement('canvas');
-  canvas.width = canvas.height = size * 2;
-  var ctx = canvas.getContext('2d');
-  if (!ctx) return null; // If no context can be found, return early.
-  ctx.fillStyle = c1;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = c2;
-  ctx.fillRect(0, 0, size, size);
-  ctx.translate(size, size);
-  ctx.fillRect(0, 0, size, size);
-  return canvas.toDataURL();
+function renderCheckboard(c1, c2, size) {
+  if (typeof document === 'undefined') return null // Dont Render On Server
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = size * 2
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return null // If no context can be found, return early.
+  ctx.fillStyle = c1
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = c2
+  ctx.fillRect(0, 0, size, size)
+  ctx.translate(size, size)
+  ctx.fillRect(0, 0, size, size)
+  return canvas.toDataURL()
 }
 
-function getCheckboard(c1: string, c2: string, size: number): any {
-  var key = c1 + ',' + c2 + ',' + size;
+function getCheckboard(c1, c2, size) {
+  const key = `${ c1 },${ c2 }, ${ size }`
+  const checkboard = renderCheckboard(c1, c2, size)
 
-  if (_checkboardCache[key]) {
-    return _checkboardCache[key];
-  } else {
-    var checkboard = renderCheckboard(c1, c2, size);
-    _checkboardCache[key] = checkboard;
-    return checkboard;
+  if (checkboardCache[key]) {
+    return checkboardCache[key]
   }
+  checkboardCache[key] = checkboard
+  return checkboard
 }
 
-export class Checkboard extends ReactCSS.Component {
-
-  classes(): any {
-    var background = getCheckboard(this.props.white, this.props.grey, this.props.size);
-    return {
-      'default': {
-        grid: {
-          Absolute: '0 0 0 0',
-          background: 'url(' + background + ') center left',
-        },
+export const Checkboard = ({ white, grey, size }) => {
+  const styles = reactCSS({
+    'default': {
+      grid: {
+        absolute: '0px 0px 0px 0px',
+        background: `url(${ getCheckboard(white, grey, size) }) center left`,
       },
-    };
-  }
+    },
+  })
 
-  render(): any {
-    return (
-      <div is="grid" ref="grid"></div>
-    );
-  }
-
+  return (
+    <div style={ styles.grid }></div>
+  )
 }
 
 Checkboard.defaultProps = {
   size: 8,
-  white: '#fff',
-  grey: '#e6e6e6',
-};
+  white: 'transparent',
+  grey: 'rgba(0,0,0,.08)',
+}
 
-export default Checkboard;
+export default Checkboard

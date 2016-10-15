@@ -1,47 +1,86 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
+import shallowCompare from 'react-addons-shallow-compare'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
+import Checkboard from './Checkboard'
 
-import Checkboard from './Checkboard';
+export class Alpha extends React.Component {
+  shouldComponentUpdate = shallowCompare.bind(this, this, arguments[0], arguments[1])
 
-export class Alpha extends ReactCSS.Component {
-
-  constructor() {
-    super();
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleMouseDown = this.handleMouseDown.bind(this);
-    this.handleMouseUp = this.handleMouseUp.bind(this);
+  componentWillUnmount() {
+    this.unbindEventListeners()
   }
 
-  classes(): any {
-    return {
+  handleChange = (e, skip) => {
+    !skip && e.preventDefault()
+    const container = this.refs.container
+    const containerWidth = container.clientWidth
+    const x = typeof e.pageX === 'number' ? e.pageX : e.touches[0].pageX
+    const inIFrame = window.self !== window.top || window.document !== container.ownerDocument
+    const left = x - (container.getBoundingClientRect().left + (inIFrame ? 0 : window.pageXOffset))
+
+    let a
+    if (left < 0) {
+      a = 0
+    } else if (left > containerWidth) {
+      a = 1
+    } else {
+      a = Math.round(left * 100 / containerWidth) / 100
+    }
+
+    if (this.props.a !== a) {
+      this.props.onChange({
+        h: this.props.hsl.h,
+        s: this.props.hsl.s,
+        l: this.props.hsl.l,
+        a,
+        source: 'rgb',
+      })
+    }
+  }
+
+  handleMouseDown = (e) => {
+    this.handleChange(e, true)
+    window.addEventListener('mousemove', this.handleChange)
+    window.addEventListener('mouseup', this.handleMouseUp)
+  }
+
+  handleMouseUp = () => {
+    this.unbindEventListeners()
+  }
+
+  unbindEventListeners = () => {
+    window.removeEventListener('mousemove', this.handleChange)
+    window.removeEventListener('mouseup', this.handleMouseUp)
+  }
+
+  render() {
+    const rgb = this.props.rgb
+    const styles = reactCSS({
       'default': {
         alpha: {
-          Absolute: '0 0 0 0',
+          absolute: '0px 0px 0px 0px',
           borderRadius: this.props.radius,
         },
         checkboard: {
-          Absolute: '0 0 0 0',
+          absolute: '0px 0px 0px 0px',
           overflow: 'hidden',
         },
         gradient: {
-          Absolute: '0 0 0 0',
-          background: 'linear-gradient(to right, rgba(' + this.props.rgb.r + ', ' + this.props.rgb.g + ', ' + this.props.rgb.b + ', 0) 0%, rgba(' + this.props.rgb.r + ', ' + this.props.rgb.g + ', ' + this.props.rgb.b + ', 1) 100%)',
+          absolute: '0px 0px 0px 0px',
+          background: `linear-gradient(to right, rgba(${ rgb.r },${ rgb.g },${ rgb.b }, 0) 0%,
+           rgba(${ rgb.r },${ rgb.g },${ rgb.b }, 1) 100%)`,
           boxShadow: this.props.shadow,
           borderRadius: this.props.radius,
         },
         container: {
           position: 'relative',
-          zIndex: '2',
           height: '100%',
           margin: '0 3px',
         },
         pointer: {
-          zIndex: '2',
           position: 'absolute',
-          left: this.props.rgb.a * 100 + '%',
+          left: `${ rgb.a * 100 }%`,
         },
         slider: {
           width: '4px',
@@ -53,69 +92,35 @@ export class Alpha extends ReactCSS.Component {
           transform: 'translateX(-2px)',
         },
       },
-    };
-  }
-
-  componentWillUnmount() {
-    this.unbindEventListeners();
-  }
-
-  handleChange(e: any, skip: boolean) {
-    !skip && e.preventDefault();
-    var container = this.refs.container;
-    var containerWidth = container.clientWidth;
-    var left = (e.pageX || e.touches[0].pageX) - (container.getBoundingClientRect().left + window.pageXOffset);
-
-    var a;
-    if (left < 0) {
-      a = 0;
-    } else if (left > containerWidth) {
-      a = 1;
-    } else {
-      a = Math.round(left * 100 / containerWidth) / 100;
-    }
-
-    if (this.props.a !== a) {
-      this.props.onChange({ h: this.props.hsl.h, s: this.props.hsl.s, l: this.props.hsl.l, a: a });
-    }
-  }
-
-  handleMouseDown(e: any) {
-    this.handleChange(e, true);
-    window.addEventListener('mousemove', this.handleChange);
-    window.addEventListener('mouseup', this.handleMouseUp);
-  }
-
-  handleMouseUp() {
-    this.unbindEventListeners();
-  }
-
-  unbindEventListeners() {
-    window.removeEventListener('mousemove', this.handleChange);
-    window.removeEventListener('mouseup', this.handleMouseUp);
-  }
-
-  render(): any {
-    var pointer = <div is="slider" />;
-
-    if (this.props.pointer) {
-      pointer = <this.props.pointer {...this.props} />;
-    }
+      'overwrite': {
+        ...this.props.style,
+      },
+    }, 'overwrite')
 
     return (
-      <div is="alpha">
-        <div is="checkboard">
+      <div style={ styles.alpha }>
+        <div style={ styles.checkboard }>
           <Checkboard />
         </div>
-        <div is="gradient" />
-        <div is="container" ref="container" onMouseDown={ this.handleMouseDown } onTouchMove={ this.handleChange }>
-          <div is="pointer" ref="pointer">
-            { pointer }
+        <div style={ styles.gradient } />
+        <div
+          style={ styles.container }
+          ref="container"
+          onMouseDown={ this.handleMouseDown }
+          onTouchMove={ this.handleChange }
+          onTouchStart={ this.handleChange }
+        >
+          <div style={ styles.pointer }>
+            { this.props.pointer ? (
+              <this.props.pointer { ...this.props } />
+            ) : (
+              <div style={ styles.slider } />
+            ) }
           </div>
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Alpha;
+export default Alpha

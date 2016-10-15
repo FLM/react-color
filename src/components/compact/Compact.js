@@ -1,71 +1,61 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
+import map from 'lodash/map'
+import color from '../../helpers/color'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
-import color from '../../helpers/color';
+import { Raised } from '../../../modules/react-material-design'
+import { ColorWrap } from '../common'
+import CompactColor from './CompactColor'
+import CompactFields from './CompactFields'
 
-import { Raised } from '../../../modules/react-material-design';
-import CompactColor from './CompactColor';
-import CompactFields from './CompactFields';
-
-export class Compact extends ReactCSS.Component {
-
-  constructor() {
-    super();
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  classes(): any {
-    return {
-      'default': {
-        Compact: {
-          background: '#f6f6f6',
-          radius: '4px',
-        },
-        compact: {
-          paddingTop: '5px',
-          paddingLeft: '5px',
-          boxSizing: 'initial',
-          width: '240px',
-        },
-
-        clear: {
-          clear: 'both',
-        },
+export const Compact = ({ onChange, colors, hex, rgb }) => {
+  const styles = reactCSS({
+    'default': {
+      Compact: {
+        background: '#f6f6f6',
+        radius: '4px',
       },
-    };
-  }
+      compact: {
+        paddingTop: '5px',
+        paddingLeft: '5px',
+        boxSizing: 'initial',
+        width: '240px',
+      },
+      clear: {
+        clear: 'both',
+      },
+    },
+  })
 
-  handleChange(data: any) {
+  const handleChange = (data) => {
     if (data.hex) {
-      color.isValidHex(data.hex) && this.props.onChange(data.hex);
+      color.isValidHex(data.hex) && onChange({
+        hex: data.hex,
+        source: 'hex',
+      })
     } else {
-      this.props.onChange(data);
+      onChange(data)
     }
   }
 
-  render(): any {
-    var colors = [];
-    if (this.props.colors) {
-      for (var i = 0; i < this.props.colors.length; i++) {
-        var color = this.props.colors[i];
-        colors.push(<CompactColor key={ color } color={ color } active={ color.replace('#', '').toLowerCase() == this.props.hex } onClick={ this.handleChange } />);
-      }
-    }
-
-    return (
-      <Raised is="Compact">
-        <div is="compact">
-          <div ref="colors">
-            { colors }
-            <div is="clear" />
-          </div>
-          <CompactFields {...this.props} onChange={ this.handleChange } />
+  return (
+    <Raised style={ styles.Compact }>
+      <div style={ styles.compact } className="compact-picker">
+        <div>
+          { map(colors, (c) => (
+            <CompactColor
+              key={ c }
+              color={ c }
+              active={ c.toLowerCase() === hex }
+              onClick={ handleChange }
+            />
+          )) }
+          <div style={ styles.clear } />
         </div>
-      </Raised>
-    );
-  }
+        <CompactFields hex={ hex } rgb={ rgb } onChange={ handleChange } />
+      </div>
+    </Raised>
+  )
 }
 
 Compact.defaultProps = {
@@ -76,6 +66,6 @@ Compact.defaultProps = {
            '#000000', '#666666', '#B3B3B3', '#9F0500', '#C45100', '#FB9E00',
            '#808900', '#194D33', '#0C797D', '#0062B1', '#653294', '#AB149E',
          ],
-};
+}
 
-export default Compact;
+export default ColorWrap(Compact)

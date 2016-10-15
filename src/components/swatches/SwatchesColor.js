@@ -1,68 +1,60 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
-
-export class SwatchesColor extends ReactCSS.Component {
-
-  constructor() {
-    super();
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  classes(): any {
-    return {
-      'default': {
-        color: {
-          width: '40px',
-          height: '24px',
-          cursor: 'pointer',
-          background: this.props.color,
-          marginBottom: '1px',
-        },
-        check: {
-          fill: '#fff',
-          marginLeft: '8px',
-          display: 'none',
-        },
+export const SwatchesColor = ({ color, onClick, first, last, active }) => {
+  const styles = reactCSS({
+    'default': {
+      color: {
+        width: '40px',
+        height: '24px',
+        cursor: 'pointer',
+        background: color,
+        marginBottom: '1px',
       },
-      'first': {
-        color: {
-          overflow: 'hidden',
-          borderRadius: '2px 2px 0 0',
-        },
+      check: {
+        fill: '#fff',
+        marginLeft: '8px',
+        display: 'none',
       },
-      'last': {
-        color: {
-          overflow: 'hidden',
-          borderRadius: '0 0 2px 2px',
-        },
+    },
+    'first': {
+      color: {
+        overflow: 'hidden',
+        borderRadius: '2px 2px 0 0',
       },
-      active: {
-        check: {
-          display: 'block',
-        },
+    },
+    'last': {
+      color: {
+        overflow: 'hidden',
+        borderRadius: '0 0 2px 2px',
       },
-    };
-  }
+    },
+    'active': {
+      check: {
+        display: 'block',
+      },
+    },
+    'color-#FFFFFF': {
+      color: {
+        boxShadow: 'inset 0 0 0 1px #eee',
+      },
+      check: {
+        fill: '#333',
+      },
+    },
+  }, { first, last, active, 'color=#FFFFFF': color === '#FFFFFF' })
 
-  handleClick() {
-    this.props.onClick(this.props.color);
-  }
+  const handleClick = () => onClick(color)
 
-  render(): any {
-    return (
-      <div is="color" ref="color" onClick={ this.handleClick }>
-        <div is="check">
-          <svg style={{ width:'24px', height:'24px', }} viewBox="0 0 24 24">
-            <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
-          </svg>
-        </div>
+  return (
+    <div style={ styles.color } onClick={ handleClick }>
+      <div style={ styles.check }>
+        <svg style={{ width: '24px', height: '24px' }} viewBox="0 0 24 24">
+          <path d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z" />
+        </svg>
       </div>
-    );
-  }
-
+    </div>
+  )
 }
 
-export default SwatchesColor;
+export default SwatchesColor

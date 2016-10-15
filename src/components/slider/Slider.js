@@ -1,53 +1,38 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
+import { ColorWrap, Hue } from '../common'
+import SliderSwatches from './SliderSwatches'
+import SliderPointer from './SliderPointer'
 
-import { Hue } from '../common';
-import SliderSwatches from './SliderSwatches';
-import SliderPointer from './SliderPointer';
-
-export class Swatches extends ReactCSS.Component {
-
-  constructor() {
-    super();
-
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  classes(): any {
-    return {
-      'default': {
-        slider: {
-        },
-        hue: {
-          height: '12px',
-          position: 'relative',
-        },
-        Hue: {
-          radius: '2px',
-        },
+export const Slider = ({ hsl, onChange }) => {
+  const styles = reactCSS({
+    'default': {
+      hue: {
+        height: '12px',
+        position: 'relative',
       },
-    };
-  }
+      Hue: {
+        radius: '2px',
+      },
+    },
+  })
 
-  handleChange(data: any) {
-    this.props.onChange(data);
-  }
-
-  render(): any {
-    return (
-      <div is="slider">
-        <div is="hue">
-          <Hue is="Hue" {...this.props} pointer={ SliderPointer } onChange={ this.handleChange } />
-        </div>
-        <div is="swatches">
-          <SliderSwatches {...this.props} onClick={ this.handleChange }/>
-        </div>
+  return (
+    <div className="slider-picker">
+      <div style={ styles.hue }>
+        <Hue
+          style={ styles.Hue }
+          hsl={ hsl }
+          pointer={ SliderPointer }
+          onChange={ onChange }
+        />
       </div>
-    );
-  }
-
+      <div style={ styles.swatches }>
+        <SliderSwatches hsl={ hsl } onClick={ onChange } />
+      </div>
+    </div>
+  )
 }
 
-export default Swatches;
+export default ColorWrap(Slider)

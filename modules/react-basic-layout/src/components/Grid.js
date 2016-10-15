@@ -1,12 +1,13 @@
-'use strict';
+'use strict'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
+import React from 'react'
+import reactCSS from 'reactcss'
 
-class Grid extends ReactCSS.Component {
+class Grid extends React.Component {
 
-  classes() {
-    return {
+  render() {
+    const isMobile = document.getElementById('root').clientWidth < 500
+    const styles = reactCSS({
       'default': {
         grid: {
           position: 'relative',
@@ -29,8 +30,8 @@ class Grid extends ReactCSS.Component {
         },
         main: {
           position: 'absolute',
-          right: '0',
-          top: '0',
+          right: '0px',
+          top: '0px',
           width: '225px',
         },
       },
@@ -41,6 +42,7 @@ class Grid extends ReactCSS.Component {
         },
         main: {
           paddingLeft: '267px',
+          width: '513px',
         },
       },
       'preset-three': {
@@ -50,13 +52,24 @@ class Grid extends ReactCSS.Component {
           height: '100%',
         },
         main: {
-          paddingLeft: '455px',
+          paddingLeft: '460px',
+        },
+      },
+
+      'preset-four': {
+        left: {
+          width: '170px',
+          position: 'absolute',
+          height: '100%',
+        },
+        main: {
+          paddingLeft: '210px',
         },
       },
 
       'mobile-default': {
         main: {
-          padding: '0',
+          padding: '0px',
         },
         left: {
           display: 'none',
@@ -64,7 +77,7 @@ class Grid extends ReactCSS.Component {
       },
       'mobile-one': {
         left: {
-          paddingRight: '0',
+          paddingRight: '0px',
         },
         main: {
           display: 'none',
@@ -90,30 +103,35 @@ class Grid extends ReactCSS.Component {
           display: 'none',
         },
       },
-    };
-  }
+      'mobile-four': {
+        grid: {
+          display: 'none',
+        },
+      },
+    }, {
+      'preset-default': this.props.preset === 'default',
+      'preset-one': this.props.preset === 'one',
+      'preset-two': this.props.preset === 'two',
+      'preset-three': this.props.preset === 'three',
+      'preset-four': this.props.preset === 'four',
+      'mobile-default': this.props.preset === 'default' && isMobile,
+      'mobile-one': this.props.preset === 'one' && isMobile,
+      'mobile-two': this.props.preset === 'two' && isMobile,
+      'mobile-three': this.props.preset === 'three' && isMobile,
+      'mobile-four': this.props.preset === 'four' && isMobile,
+    })
 
-  styles() {
-    return this.css({
-      'mobile-default': this.props.preset === 'default' && document.getElementById('root').clientWidth < 500,
-      'mobile-one': this.props.preset === 'one' && document.getElementById('root').clientWidth < 500,
-      'mobile-two': this.props.preset === 'two' && document.getElementById('root').clientWidth < 500,
-      'mobile-three': this.props.preset === 'three' && document.getElementById('root').clientWidth < 500,
-    });
-  }
-
-  render() {
     return (
-      <div is="grid">
-        <div is="left">{ this.props.children[0] }</div>
-        <div is="main">{ this.props.children[1] }</div>
+      <div style={ styles.grid }>
+        <div style={ styles.left }>{ this.props.children[0] }</div>
+        <div style={ styles.main }>{ this.props.children[1] }</div>
       </div>
-    );
+    )
   }
 }
 
 Grid.defaultProps = {
   preset: 'default',
-};
+}
 
-export default Grid;
+export default Grid

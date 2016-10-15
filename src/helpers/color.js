@@ -1,48 +1,51 @@
-'use strict'; /* @flow */
-
-import tinycolor from '../../modules/tinycolor2';
+import each from 'lodash/each'
+import tinycolor from '../../modules/tinycolor2'
 
 export default {
 
-  simpleCheckForValidColor: function(data: any): any {
-    var keysToCheck = ['r', 'g', 'b', 'a', 'h', 's', 'a', 'v'];
-    var checked = 0;
-    var passed = 0;
-    for (var i = 0; i < keysToCheck.length; i++) {
-      var letter = keysToCheck[i];
+  simpleCheckForValidColor(data) {
+    const keysToCheck = ['r', 'g', 'b', 'a', 'h', 's', 'a', 'v']
+    let checked = 0
+    let passed = 0
+    each(keysToCheck, (letter) => {
       if (data[letter]) {
-        checked++;
+        checked++
         if (!isNaN(data[letter])) {
-          passed++;
+          passed++
         }
       }
-    }
-
-    if (checked === passed) {
-      return data;
-    }
+    })
+    return (checked === passed) ? data : false
   },
 
-  toState: function(data: any, oldHue: number): any {
-    var color = tinycolor(data);
-    var hsl = color.toHsl();
-    var hsv = color.toHsv();
+  toState(data, oldHue) {
+    const color = data.hex ? tinycolor(data.hex) : tinycolor(data)
+    const hsl = color.toHsl()
+    const hsv = color.toHsv()
     if (hsl.s === 0) {
-      hsl.h = oldHue || 0;
-      hsv.h = oldHue || 0;
+      hsl.h = oldHue || 0
+      hsv.h = oldHue || 0
     }
 
     return {
-      hsl: hsl,
-      hex: color.toHex(),
+      hsl,
+      hex: `#${ color.toHex() }`,
       rgb: color.toRgb(),
-      hsv: hsv,
+      hsv,
       oldHue: data.h || oldHue || hsl.h,
-    };
+      source: data.source,
+    }
   },
 
-  isValidHex: function(hex: string): boolean {
-    return tinycolor(hex).isValid();
+  isValidHex(hex) {
+    return tinycolor(hex).isValid()
   },
 
-};
+}
+
+export const red = {
+  hsl: { a: 1, h: 0, l: 0.5, s: 1 },
+  hex: '#ff0000',
+  rgb: { r: 255, g: 0, b: 0, a: 1 },
+  hsv: { h: 0, s: 1, v: 1, a: 1 },
+}

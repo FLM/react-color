@@ -1,41 +1,27 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
-
-export class PhotoshopPointerCircle extends ReactCSS.Component {
-
-  classes(): any {
-    return {
-      'default': {
-        picker: {
-          width: '12px',
-          height: '12px',
-          borderRadius: '6px',
-          boxShadow: 'inset 0 0 0 1px #fff',
-          transform: 'translate(-6px, -6px)',
-        },
+export const PhotoshopPointerCircle = ({ hsl }) => {
+  const styles = reactCSS({
+    'default': {
+      picker: {
+        width: '12px',
+        height: '12px',
+        borderRadius: '6px',
+        boxShadow: 'inset 0 0 0 1px #fff',
+        transform: 'translate(-6px, -6px)',
       },
-      'black-outline': {
-        picker: {
-          boxShadow: 'inset 0 0 0 1px #000',
-        },
+    },
+    'black-outline': {
+      picker: {
+        boxShadow: 'inset 0 0 0 1px #000',
       },
-    };
-  }
+    },
+  }, { 'black-outline': hsl.l > 0.5 })
 
-  styles(): any {
-    return this.css({
-      'black-outline': this.props.hsl.l > .5,
-    });
-  }
-
-  render(): any {
-    return (
-      <div is="picker"></div>
-    );
-  }
-
+  return (
+    <div style={ styles.picker }></div>
+  )
 }
 
-export default PhotoshopPointerCircle;
+export default PhotoshopPointerCircle

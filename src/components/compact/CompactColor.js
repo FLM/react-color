@@ -1,63 +1,50 @@
-'use strict'; /* @flow */
+import React from 'react'
+import reactCSS from 'reactcss'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
-
-export class CompactColor extends ReactCSS.Component {
-
-  constructor() {
-    super();
-
-    this.handleClick = this.handleClick.bind(this);
-  }
-
-  classes(): any {
-    return {
-      'default': {
-        color: {
-          background: this.props.color,
-          width: '15px',
-          height: '15px',
-          float: 'left',
-          marginRight: '5px',
-          marginBottom: '5px',
-          position: 'relative',
-          cursor: 'pointer',
-        },
-        dot: {
-          Absolute: '5px 5px 5px 5px',
-          background: '#fff',
-          borderRadius: '50%',
-          opacity: '0',
-        },
+export const CompactColor = ({ color, onClick, active }) => {
+  const styles = reactCSS({
+    'default': {
+      color: {
+        background: color,
+        width: '15px',
+        height: '15px',
+        float: 'left',
+        marginRight: '5px',
+        marginBottom: '5px',
+        position: 'relative',
+        cursor: 'pointer',
       },
-      'active': {
-        dot: {
-          opacity: '1',
-        },
+      dot: {
+        absolute: '5px 5px 5px 5px',
+        background: '#fff',
+        borderRadius: '50%',
+        opacity: '0',
       },
-      'color-#FFFFFF': {
-        color: {
-          boxShadow: 'inset 0 0 0 1px #ddd',
-        },
-        dot: {
-          background: '#000',
-        },
+    },
+    'active': {
+      dot: {
+        opacity: '1',
       },
-    };
+    },
+    'color-#FFFFFF': {
+      color: {
+        boxShadow: 'inset 0 0 0 1px #ddd',
+      },
+      dot: {
+        background: '#000',
+      },
+    },
+  }, { active, 'color-#FFFFFF': color === '#FFFFFF' })
+
+  const handleClick = () => {
+    onClick({ hex: color })
   }
 
-  handleClick() {
-    this.props.onClick({ hex: this.props.color });
-  }
-
-  render(): any {
-    return (
-      <div is="color" ref="color" onClick={ this.handleClick }>
-        <div is="dot" />
-      </div>
-    );
-  }
+  return (
+    <div style={ styles.color } onClick={ handleClick }>
+      <div style={ styles.dot } />
+    </div>
+  )
 }
 
-export default CompactColor;
+export default CompactColor

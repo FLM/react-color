@@ -1,30 +1,40 @@
-'use strict';
+'use strict'
 
-import React from 'react';
-import ReactCSS from 'reactcss';
-import ColorPicker from 'react-color';
+import React from 'react'
+import reactCSS from 'reactcss'
+import { SketchPicker } from 'react-color'
 
-class SketchExample extends ReactCSS.Component {
+class SketchExample extends React.Component {
+  state = {
+    displayColorPicker: false,
+    color: {
+      r: '241',
+      g: '112',
+      b: '19',
+      a: '1',
+    },
+  };
 
-  constructor() {
-    super();
-    this.state = {
-      displayColorPicker: false,
-      color: '#F17013',
-    };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleClose = this.handleClose.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
+  handleClick = () => {
+    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+  };
 
-  classes() {
-    return {
+  handleClose = () => {
+    this.setState({ displayColorPicker: false })
+  };
+
+  handleChange = (color) => {
+    this.setState({ color: color.rgb })
+  };
+
+  render() {
+    const styles = reactCSS({
       'default': {
         color: {
           width: '36px',
           height: '14px',
           borderRadius: '2px',
-          background: this.state.color,
+          background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
         },
         swatch: {
           padding: '5px',
@@ -34,32 +44,33 @@ class SketchExample extends ReactCSS.Component {
           display: 'inline-block',
           cursor: 'pointer',
         },
+        popover: {
+          position: 'absolute',
+          zIndex: '2',
+        },
+        cover: {
+          position: 'fixed',
+          top: '0px',
+          right: '0px',
+          bottom: '0px',
+          left: '0px',
+        },
       },
-    };
-  }
+    })
 
-  handleClick() {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker });
-  }
-
-  handleClose() {
-    this.setState({ displayColorPicker: false });
-  }
-
-  handleChange(color) {
-    this.setState({ color: '#' + color.hex });
-  }
-
-  render() {
     return (
       <div>
-        <div is="swatch" onClick={ this.handleClick }>
-          <div is="color" />
+        <div style={ styles.swatch } onClick={ this.handleClick }>
+          <div style={ styles.color } />
         </div>
-        <ColorPicker color={ this.state.color } display={ this.state.displayColorPicker } position="below" onChange={ this.handleChange } onClose={ this.handleClose } type="sketch" />
-      </div>
-    );
-  }
-};
+        { this.state.displayColorPicker ? <div style={ styles.popover }>
+          <div style={ styles.cover } onClick={ this.handleClose } />
+          <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+        </div> : null }
 
-export default SketchExample;
+      </div>
+    )
+  }
+}
+
+export default SketchExample
