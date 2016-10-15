@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import isString from 'lodash.isstring';
+import isString from 'lodash/isString';
 
 class Link extends React.Component {
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactCSS from 'reactcss';
-import isString from 'lodash.isstring';
+import isString from 'lodash/isString';
 
 import Tab from './Tab';
 import Link from './Link';
