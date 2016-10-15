@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import isString from 'lodash/isString';
+import _ from 'lodash';
 
 class Link extends React.Component {
 
@@ -19,7 +19,7 @@ class Link extends React.Component {
   render() {
 
     var a;
-    if (isString(this.props.onClick)) {
+    if (_.isString(this.props.onClick)) {
       a = <a style={{ textDecoration: 'none' }} href={ this.props.onClick } target={ this.props.newTab && '_blank' }>{ this.props.children }</a>;
     } else {
       a = <a style={{ textDecoration: 'none' }} onClick={ this.handleClick }>{ this.props.children }</a>;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactCSS from 'reactcss';
-import isString from 'lodash/isString';
+import _ from 'lodash';
 
 import Tab from './Tab';
 import Link from './Link';
@@ -178,7 +178,7 @@ class Tabs extends ReactCSS.Component {
       var callback;
       var callbackValue;
       var newTab;
-      if (isString(tab)) {
+      if (_.isString(tab)) {
         label = tab;
         callback = null;
       } else {
