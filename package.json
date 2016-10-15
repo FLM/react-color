@@ -25,14 +25,12 @@
     "material design",
     "popup"
   ],
-  "dependencies": {
-    "lodash.debounce": "^4.0.0",
-    "lodash.isplainobject": "^4.0.0",
-    "lodash.throttle": "^4.0.0",
-  },
   "peerDependencies": {
     "react": "^0.14.0",
     "react-dom": "^0.14.0",
+    "lodash.debounce": "^4.0.0",
+    "lodash.isplainobject": "^4.0.0",
+    "lodash.throttle": "^4.0.0",
     "material-colors": "^1.0.0",
     "merge": "^1.2.0"
   },
